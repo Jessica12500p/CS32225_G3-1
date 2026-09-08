@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>眠序 · 智能床垫研究平台</title><link rel="stylesheet" href="/static/style.css"></head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="/"><span class="brand-icon">≋</span><span>眠序<small>SOMNA LAB</small></span></a>
+  <div class="nav-label">工作空间</div>
+  <nav aria-label="主要导航">
+    <button data-tab="monitor" class="active"><span>◉</span>实时监测 <i>LIVE</i></button>
+    <button data-tab="posture"><span>▦</span>睡姿图谱</button>
+    <button data-tab="regions"><span>▤</span>身体区域</button>
+    <button data-tab="identity"><span>◎</span>用户识别</button>
+    <button data-tab="evaluation"><span>▥</span>算法评估</button>
+  </nav>
+  <div class="side-bottom"><div class="device-icon">▰</div><strong>智能压力感知床垫</strong><p>44 × 24 传感器矩阵</p><span class="side-status"><b></b> 本地数据工作空间</span><div class="side-foot">SMART REST. BETTER INSIGHT.<br>睡眠的每一刻，都有迹可循。</div></div>
+</aside>
+<div class="workspace">
+<header class="topbar"><div>研究工作台 <span>/</span> <b id="breadcrumb">实时监测</b></div><div class="top-actions"><span class="local-pill">● 本地采集数据</span><span class="avatar">研</span></div></header>
+<main>
+<div class="page-heading"><div><div class="eyebrow">PRESSURE INTELLIGENCE</div><h1 id="page-title">看见每一刻的支撑</h1><p id="page-description">从压力分布到身体状态，让睡眠数据清晰可见。</p></div><a class="button secondary" href="/api/export" download>↓ 导出评估报告</a></div>
+<div id="error" class="error" role="alert" hidden></div>
+<section id="monitor" class="tab active">
+  <div class="toolbar"><div class="toolbar-label"><span class="dot"></span><strong>动态采集回放</strong><span class="muted">70 秒采集过程</span></div><label>采集组 <select id="session" aria-label="动态采集组"></select></label><button id="play" class="button primary">▶ 开始回放</button></div>
+  <div class="metrics-grid">
+    <article class="metric"><div>最大压力 <span>↗</span></div><strong id="maximum">—</strong><small>原始传感器读数</small><div class="mini-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+    <article class="metric"><div>平均压力 <span>≈</span></div><strong id="mean">—</strong><small>全部 1,056 个传感器点</small></article>
+    <article class="metric"><div>接触面指数 <span>▧</span></div><strong id="contact">—</strong><small>压力读数 &gt; 5 的点占比</small></article>
+    <article class="metric state-card"><div>当前身体状态 <span>◉</span></div><strong id="sleep-state">—</strong><small id="pose-state">等待模型推断</small></article>
+  </div>
+  <div class="monitor-grid">
+    <article class="panel pressure-panel"><div class="panel-heading"><div><h2>身体压力分布</h2><p>真实压力矩阵 · 44 × 24</p></div><span class="badge" id="frame-badge">FRAME 000</span></div>
+      <div class="pressure-display"><div class="axis-label head-label">头部 HEAD</div><canvas id="pressure-canvas" width="288" height="528" aria-label="实时压力分布热力图"></canvas><div class="axis-label foot-label">足部 FOOT</div><div class="color-legend"><span id="scale-max">—</span><div></div><span>0</span></div><div class="pressure-note"><span class="cross">＋</span>压力重心</div></div>
+      <div class="playback"><span id="time">00:00</span><input id="timeline" type="range" min="0" max="158" value="0" aria-label="回放时间"><span>01:10</span></div><p class="fine-print" id="replay-source">读取动态采集文件…</p>
+    </article>
+    <div class="right-stack"><article class="panel support-panel"><div class="panel-heading"><div><h2>气囊支撑调节</h2><p>编号参考传感器布置图 · 68 个气囊</p></div><span class="badge amber">调节示例</span></div><div class="bed-container"><div class="bed-half"><span>左侧 · 关联压力数据</span><div class="airbag-bed" id="left-bed"></div></div><div class="bed-half"><span>右侧 · 无采集数据</span><div class="airbag-bed" id="right-bed"></div></div><div class="support-detail"><div class="eyebrow">SELECTED AIRBAG</div><h3 id="bag-name">气囊 00</h3><div class="support-value"><strong id="bag-fill">50</strong><span>% 充气量</span></div><div class="fill-track"><div id="fill-bar"></div></div><dl><dt>示例支撑高度</dt><dd id="bag-height">—</dd><dt>对应点压力</dt><dd id="bag-pressure">—</dd><dt>矩阵位置（行,列）</dt><dd id="bag-sensor">—</dd></dl></div></div><div class="control-row"><label for="strength">示例调节强度</label><input id="strength" type="range" min="0" max="100" value="50"><output id="strength-value">50%</output></div><p class="fine-print">气囊充气量与支撑高度为同一组模拟示例；点位为示意映射，尚无硬件标定。</p></article>
+    <article class="panel trend-panel"><div class="panel-heading"><div><h2>压力与气囊变化</h2><p>当前回放的最近 60 帧 · 各曲线独立归一化</p></div><div class="chart-legend"><span>● 最大压力</span><span>● 点压力</span><span>● 充气量</span></div></div><svg id="trend" viewBox="0 0 680 145" role="img" aria-label="压力和气囊时间序列"></svg><div class="trend-caption"><span>较早</span><span>当前</span></div></article></div>
+  </div>
+  <div class="info-line"><span>ⓘ</span>按文档时长等间隔回放，非硬件实时连接。状态检测覆盖静卧、体动、翻身与离床，不推断深浅睡眠。</div>
+</section>
+<section id="posture" class="tab">
+  <div class="toolbar"><div><strong>原始睡姿图谱</strong><span class="muted">　来自提供的部分热力图</span></div><label>采集组 <select id="gallery-person"><option>SAI</option><option>dgs</option></select></label></div>
+  <div class="gallery" id="gallery"></div><div class="info-line">ⓘ　睡姿名称遵循数据集定义。图片仅覆盖部分用户与动作；点击查看包含帧号和色标的完整原图。</div>
+</section>
+<section id="regions" class="tab">
+  <div class="toolbar sample-controls"><strong>五区域定位</strong><label>用户 <select id="region-person"></select></label><label>动作 <select id="region-action"></select></label><label>帧 <input id="region-frame" type="number" min="0" max="59" value="0"></label><button id="region-load" class="button primary">分析压力帧</button></div>
+  <div class="region-grid"><article class="panel"><div class="panel-heading"><h2>模型预测与原始标注</h2><span class="badge">五个身体区域</span></div><div class="region-map"><canvas id="region-canvas" width="336" height="616" aria-label="五区域预测热力图"></canvas></div><p class="fine-print">实线：模型预测　虚线：当前帧人工标注（存在时）</p></article><div><article class="panel"><div class="panel-heading"><h2>身体区域结果</h2><span id="region-pose" class="badge"></span></div><div id="region-results"></div><p class="fine-print" id="region-annotation-note"></p></article><article class="panel reference-panel"><h2>提供的区域标注示例</h2><p>hpy · 首图对应所选睡姿 · 原图非模型预测</p><div class="pose-tabs" id="region-reference-tabs"></div><button id="region-reference" class="reference-image" aria-label="查看区域划分原图"></button></article></div></div>
+</section>
+<section id="identity" class="tab">
+  <div class="toolbar sample-controls"><strong>用户模板匹配</strong><label>用户 <select id="identity-person"></select></label><label>动作 <select id="identity-action"></select></label><label>帧 <input id="identity-frame" type="number" min="0" max="59" value="0"></label><button id="identity-load" class="button primary">开始识别</button></div>
+  <div class="identity-grid"><article class="panel"><div class="panel-heading"><div><h2>用户特征空间</h2><p>独立测试帧 · PCA 二维投影</p></div><span class="badge">可悬停查看</span></div><svg id="projection" viewBox="0 0 680 430" role="img" aria-label="用户特征二维散点图"></svg><div class="info-line">● 已注册用户　◇ 未注册用户　·　颜色区分用户，投影仅展示前两个主成分。</div></article><div><article class="panel identity-result"><div class="eyebrow">IDENTITY MATCH</div><div class="identity-avatar">◎</div><h2 id="identity-name">等待识别</h2><p id="identity-info">从采集数据中选择一帧进行匹配</p><dl><dt>模板距离</dt><dd id="identity-distance">—</dd><dt>拒绝阈值</dt><dd id="identity-threshold">—</dd></dl><p class="fine-print">距离超过校准阈值则拒绝识别；单帧演示可能来自注册或测试集，正式结果见算法评估。</p></article><article class="panel enroll-panel"><h2>添加用户模板</h2><p>将所选用户、动作的前 5 帧加入本地模板库。</p><form id="enroll-form"><label for="enroll-name">注册名称</label><input id="enroll-name" required maxlength="40" placeholder="输入新用户名称"><button class="button primary" type="submit">＋ 保存模板</button></form><p id="enroll-status" class="fine-print" role="status">无需改变模型结构；原始实验报告不随注册操作变更。</p></article></div></div>
+</section>
+<section id="evaluation" class="tab"><div id="evaluation-content" class="panel">正在读取训练结果…</div></section>
+<footer><span>眠序 SOMNA LAB</span><span>数据驱动的睡眠研究 · 本地算法与可视化工作台</span><span>44 × 24 / 1,056 SENSORS</span></footer>
+</main></div>
+<dialog id="image-dialog"><div class="dialog-heading"><strong id="image-title"></strong><button id="close-dialog" class="button secondary">关闭 ×</button></div><img id="full-image" alt="原始采集热力图页面"><p id="image-note"></p></dialog>
+<script type="module" src="/static/app.js"></script>
+</body></html>
