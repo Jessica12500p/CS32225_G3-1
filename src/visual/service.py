@@ -18,7 +18,7 @@ class MattressService:
 
     def report(self):
         path=RESULTS/'metrics.json'
-        return json.loads(path.read_text()) if path.exists() else {'completed':False}
+        return json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'completed':False}
 
     @lru_cache(maxsize=6)
     def model(self,name,mtime):

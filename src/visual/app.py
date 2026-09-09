@@ -33,7 +33,7 @@ def create_app(service=None):
     @app.get('/api/projection')
     def projection():
         path=RESULTS/'identity_projection.json'
-        return jsonify(json.loads(path.read_text()) if path.exists() else {'points':[]})
+        return jsonify(json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'points':[]})
 
     @app.get('/api/frame')
     def frame():
